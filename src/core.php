@@ -91,7 +91,7 @@ class Core {
 
         $tag_ids = [];
         for ( $i = 0; $i < (int) $assoc_args['tags']; $i++ ) {
-            $tag = \wp_insert_term( $faker->unique()->catchPhrase, 'tag', [ 'description' => $faker->paragraph ] );
+            $tag = \wp_insert_term( $faker->unique()->catchPhrase, 'post_tag', [ 'description' => $faker->paragraph ] );
 
             if ( \is_wp_error( $tag ) ) {
                 \WP_CLI::warning( "Couln't create tag: " . $tag->get_error_message() );
