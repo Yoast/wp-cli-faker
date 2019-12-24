@@ -163,6 +163,8 @@ class Core {
             $attachment_url = wp_get_attachment_url( $attachment_id );
             $blocks[] = "<!-- wp:image {\"id\":$attachment_id,\"sizeSlug\":\"large\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"$attachment_url\" alt=\"\" class=\"wp-image-206\"/></figure>\n<!-- /wp:image -->";
         }
+
+        return implode( "\n", $blocks );
     }
 }
 
