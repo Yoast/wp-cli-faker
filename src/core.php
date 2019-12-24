@@ -82,6 +82,7 @@ class Core {
             ] );
 
             if ( \is_wp_error( $category ) ) {
+                \WP_CLI::warning( "Couln't create category: " . $category->get_error_message() );
                 continue;
             }
 
@@ -93,6 +94,7 @@ class Core {
             $tag = \wp_insert_term( $faker->unique()->catchPhrase, 'tag', [ 'description' => $faker->paragraph ] );
 
             if ( \is_wp_error( $tag ) ) {
+                \WP_CLI::warning( "Couln't create tag: " . $tag->get_error_message() );
                 continue;
             }
 
