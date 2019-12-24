@@ -28,6 +28,16 @@ class Core {
      * default: 25
      * ---
      * 
+     * [--attachments=<attachments>]
+     * : The number of attachments to generate.
+     * ---
+     * default: 10
+     * 
+     * [--attachment-keyword=<attachment-keyword>]
+     * : The keyword used to generate attachments.
+     * ---
+     * default: wordpress
+     * 
      * [--posts=<posts>]
      * : The number of posts to generate.
      * ---
@@ -37,7 +47,7 @@ class Core {
      * [--pages=<pages>]
      * : The number of pages to generate.
      * ---
-     * default: 25
+     * default: 5
      * ---
      *
      * ## EXAMPLES
@@ -66,39 +76,56 @@ class Core {
 
         $category_ids = [];
         for ( $i = 0; $i < (int) $assoc_args['categories']; $i++ ) {
-            $category_ids[] = \wp_insert_term( $faker->unique()->catchPhrase, 'category', [
+            $category = \wp_insert_term( $faker->unique()->catchPhrase, 'category', [
                 'description' => $faker->paragraph,
                 'parent'      => ( $faker->boolean && count( $category_ids ) > 0 ) ? $faker->randomElement( $category_ids ) : null,
             ] );
+            $category_ids[] = $category['term_id'];
         }
 
         $tag_ids = [];
         for ( $i = 0; $i < (int) $assoc_args['tags']; $i++ ) {
-            $tag_ids[] = \wp_insert_term( $faker->unique()->catchPhrase, 'tag', [ 'description' => $faker->paragraph ] );
+            $tag = \wp_insert_term( $faker->unique()->catchPhrase, 'tag', [ 'description' => $faker->paragraph ] );
+            $tag_ids[] = $tag['term_id'];
         }
 
-        $post_ids = [];
+        $attachment_ids = [];
         for ( $i = 0; $i < (int) $assoc_args['posts']; $i++ ) {
-            $date = $faker->dateTimeThisCentury;
-            $post_ids[] = \wp_insert_post( [
+            $file_array         = [];
+            $file_array['name'] = "{$assoc_args['attachment-keyword']}$i.jpg";
+
+            // Download file to temp location.
+            $file_array['tmp_name'] = download_url( "https://loremflickr.com/640/480/{$assoc_args['attachment-keyword']}" );
+            if ( is_wp_error( $file_array['tmp_name'] ) ) {
+                continue;
+            }
+
+            // Do the validation and storage stuff.
+            $attachment_ids[] = media_handle_sideload( $file_array, 0, null );
+        }
+
+        for ( $i = 0; $i < (int) $assoc_args['posts']; $i++ ) {
+            $date = $faker->dateTimeThisYear;
+            $post_id = \wp_insert_post( [
                 'post_author'   => $faker->randomElement( $author_ids ),
                 'post_date'     => $date->format( 'Y-m-d H:i:s' ),
-                'post_content'  => $faker->paragraphs( $faker->numberBetween( 15, 25 ), true ),
+                'post_content'  => $this->generate_post_content( $faker, $attachment_ids ),
                 'post_title'    => $faker->catchPhrase,
                 'post_status'   => 'publish',
                 'post_modified' => ( $faker->boolean ? $faker->dateTimeBetween( $date ) : $date )->format( 'Y-m-d H:i:s' ),
                 'post_category' => $faker->randomElements( $category_ids, $faker->numberBetween( 1, 2 ) ),
                 'tags_input'    => $faker->randomElements( $tag_ids, $faker->numberBetween( 0, 4 ) ),
             ] );
+            \set_post_thumbnail( $post_id, $faker->randomElement( $attachment_ids ) );
         }
 
         $page_ids = [];
         for ( $i = 0; $i < (int) $assoc_args['posts']; $i++ ) {
-            $date = $faker->dateTimeThisCentury;
-            $page_ids[] = \wp_insert_post( [
+            $date = $faker->dateTimeThisYear;
+            $page_id = \wp_insert_post( [
                 'post_author'   => $faker->randomElement( $author_ids ),
                 'post_date'     => $date->format( 'Y-m-d H:i:s' ),
-                'post_content'  => $faker->paragraphs( $faker->numberBetween( 15, 25 ), true ),
+                'post_content'  => $this->generate_post_content( $faker, $attachment_ids ),
                 'post_title'    => $faker->unique()->catchPhrase,
                 'post_type'     => 'page',
                 'post_status'   => 'publish',
@@ -107,6 +134,24 @@ class Core {
                 'post_category' => $faker->randomElements( $category_ids, $faker->numberBetween( 1, 2 ) ),
                 'tags_input'    => $faker->randomElements( $tag_ids, $faker->numberBetween( 0, 4 ) ),
             ] );
+            \set_post_thumbnail( $page_id, $faker->randomElement( $attachment_ids ) );
+            $page_ids[] = $page_id;
+        }
+    }
+
+    private function generate_post_content( $faker, $attachment_ids ) {
+        $blocks      = [];
+        $block_count = $faker->numberBetween( 8, 12 );
+        
+        for ( $i = 0; $i < $block_count; $i++ ) {
+            if ( $faker->boolean( 90 ) ) {
+                $blocks[] = "<!-- wp:paragraph -->\n<p>" . $faker->paragraph . "</p>\n<!-- /wp:paragraph -->";
+                continue;
+            }
+
+            $attachment_id  = $faker->randomElement( $attachment_ids );
+            $attachment_url = wp_get_attachment_url( $attachment_id );
+            $blocks[] = "<!-- wp:image {\"id\":$attachment_id,\"sizeSlug\":\"large\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"$attachment_url\" alt=\"\" class=\"wp-image-206\"/></figure>\n<!-- /wp:image -->";
         }
     }
 }
