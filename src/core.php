@@ -80,12 +80,22 @@ class Core {
                 'description' => $faker->paragraph,
                 'parent'      => ( $faker->boolean && count( $category_ids ) > 0 ) ? $faker->randomElement( $category_ids ) : null,
             ] );
+
+            if ( \is_wp_error( $category ) ) {
+                continue;
+            }
+
             $category_ids[] = $category['term_id'];
         }
 
         $tag_ids = [];
         for ( $i = 0; $i < (int) $assoc_args['tags']; $i++ ) {
             $tag = \wp_insert_term( $faker->unique()->catchPhrase, 'tag', [ 'description' => $faker->paragraph ] );
+
+            if ( \is_wp_error( $tag ) ) {
+                continue;
+            }
+
             $tag_ids[] = $tag['term_id'];
         }
 
