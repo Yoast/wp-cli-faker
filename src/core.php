@@ -15,35 +15,35 @@ class Core {
      * ---
      * default: 10
      * ---
-     * 
+     *
      * [--categories=<categories>]
      * : The number of categories to generate.
      * ---
      * default: 10
      * ---
-     * 
+     *
      * [--tags=<tags>]
      * : The number of tags to generate.
      * ---
      * default: 25
      * ---
-     * 
+     *
      * [--attachments=<attachments>]
      * : The number of attachments to generate.
      * ---
      * default: 10
-     * 
+     *
      * [--attachment-keyword=<attachment-keyword>]
      * : The keyword used to generate attachments.
      * ---
      * default: wordpress
-     * 
+     *
      * [--posts=<posts>]
      * : The number of posts to generate.
      * ---
      * default: 100
      * ---
-     * 
+     *
      * [--pages=<pages>]
      * : The number of pages to generate.
      * ---
@@ -102,7 +102,7 @@ class Core {
         }
 
         $attachment_ids = [];
-        for ( $i = 0; $i < (int) $assoc_args['posts']; $i++ ) {
+        for ( $i = 0; $i < (int) $assoc_args['attachments']; $i++ ) {
             $file_array         = [];
             $file_array['name'] = "{$assoc_args['attachment-keyword']}$i.jpg";
 
@@ -132,7 +132,7 @@ class Core {
         }
 
         $page_ids = [];
-        for ( $i = 0; $i < (int) $assoc_args['posts']; $i++ ) {
+        for ( $i = 0; $i < (int) $assoc_args['pages']; $i++ ) {
             $date = $faker->dateTimeThisYear;
             $page_id = \wp_insert_post( [
                 'post_author'   => $faker->randomElement( $author_ids ),
@@ -154,7 +154,7 @@ class Core {
     private function generate_post_content( $faker, $attachment_ids ) {
         $blocks      = [];
         $block_count = $faker->numberBetween( 8, 12 );
-        
+
         for ( $i = 0; $i < $block_count; $i++ ) {
             if ( $faker->boolean( 90 ) ) {
                 $blocks[] = "<!-- wp:paragraph -->\n<p>" . $faker->paragraph . "</p>\n<!-- /wp:paragraph -->";
@@ -163,7 +163,7 @@ class Core {
 
             $attachment_id  = $faker->randomElement( $attachment_ids );
             $attachment_url = wp_get_attachment_url( $attachment_id );
-            $blocks[] = "<!-- wp:image {\"id\":$attachment_id,\"sizeSlug\":\"large\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"$attachment_url\" alt=\"\" class=\"wp-image-206\"/></figure>\n<!-- /wp:image -->";
+            $blocks[] = "<!-- wp:image {\"id\":$attachment_id,\"sizeSlug\":\"large\"} -->\n<figure class=\"wp-block-image size-large\"><img src=\"$attachment_url\" alt=\"\" class=\"wp-image-$attachment_id\"/></figure>\n<!-- /wp:image -->";
         }
 
         return implode( "\n", $blocks );
