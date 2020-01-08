@@ -73,12 +73,18 @@ class WooCommerce {
 
         $category_ids = [];
         for ( $i = 0; $i < (int) $assoc_args['categories']; $i++ ) {
-            $category_ids[] = $this->generate_category( $faker, $attachment_ids );
+            $category_id = $this->generate_category( $faker, $attachment_ids );
+            if ( $category_id ) {
+                $category_ids[] = $category_id;
+            }
         }
 
         $product_ids = [];
         for ( $i = 0; $i < (int) $assoc_args['products']; $i++ ) {
-            $product_ids[] = $this->generate_product( $faker, $attachment_ids, $category_ids );
+            $product_id = $this->generate_product( $faker, $attachment_ids, $category_ids );
+            if ( $product_id ) {
+                $product_ids[] = $product_id;
+            }
         }
 
         foreach ( $product_ids as $product_id ) {
@@ -120,6 +126,12 @@ class WooCommerce {
         ] );
 
         $response = $controller->create_item( $request );
+
+        if ( \is_wp_error( $response ) ) {
+            \WP_CLI::warning( "Couln't create product: " . $response->get_error_message() );
+            return false;
+        }
+
         return $response['id'];
     }
 
@@ -133,6 +145,12 @@ class WooCommerce {
         ] );
 
         $response = $controller->create_item( $request );
+
+        if ( \is_wp_error( $response ) ) {
+            \WP_CLI::warning( "Couln't create product: " . $response->get_error_message() );
+            return false;
+        }
+
         return $response['id'];
     }
 
@@ -162,6 +180,12 @@ class WooCommerce {
         }
 
         $response = $controller->create_item( $request );
+
+        if ( \is_wp_error( $response ) ) {
+            \WP_CLI::warning( "Couln't create product: " . $response->get_error_message() );
+            return false;
+        }
+
         return $response['id'];
     }
 }
