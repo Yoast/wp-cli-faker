@@ -44,7 +44,7 @@ class WooCommerce {
      * [--max-reviews=<max-reviews>]
      * : The maximum number of reviews to generate.
      * ---
-     * default: 10
+     * default: 8
      * ---
      *
      * ## EXAMPLES
@@ -90,7 +90,7 @@ class WooCommerce {
         add_filter( 'wp_is_comment_flood', '__return_false', PHP_INT_MAX );
         add_filter( 'pre_comment_approved', '__return_true' );
         foreach ( $product_ids as $product_id ) {
-            $number_of_reviews = $faker->numberBetween( $assoc_args['max-reviews'], $assoc_args['max-reviews'] );
+            $number_of_reviews = $faker->numberBetween( $assoc_args['min-reviews'], $assoc_args['max-reviews'] );
             for ( $i = 0; $i < $number_of_reviews; $i++ ) {
                 $this->generate_review( $faker, $product_id );
             }
@@ -124,7 +124,7 @@ class WooCommerce {
             'product_id' => $product_id,
             'review' => $faker->paragraph,
             'reviewer' => $faker->name,
-            'reveiwer_email' => $faker->email,
+            'reviewer_email' => $faker->email,
             'rating' => $faker->numberBetween( 0, 5 ),
             'verified' => $faker->boolean
         ];
