@@ -116,14 +116,16 @@ class WooCommerce {
     private function generate_review( Generator $faker, $product_id ) {
         $controller = new \WC_REST_Product_Reviews_Controller();
 
-        $request    = new \WP_REST_Request( 'POST', '', [
+        $params = [
             'product_id' => $product_id,
             'review' => $faker->paragraph,
             'reviewer' => $faker->name,
             'reveiwer_email' => $faker->email,
             'rating' => $faker->numberBetween( 0, 5 ),
             'verified' => $faker->boolean
-        ] );
+        ];
+        $request = new \WP_REST_Request( 'POST' );
+        $request->set_body_params( $params );
 
         $response = $controller->create_item( $request );
 
@@ -138,11 +140,13 @@ class WooCommerce {
     private function generate_category( Generator $faker, $attachment_ids ) {
         $controller = new \WC_REST_Product_Categories_Controller();
 
-        $request    = new \WP_REST_Request( 'POST', '', [
+        $params = [
             'name' => $faker->unique()->catchPhrase,
             'description' => $this->generate_post_content( $faker, $attachment_ids ),
             'image' => [ 'id' => $faker->randomElement( $attachment_ids ) ],
-        ] );
+        ];
+        $request = new \WP_REST_Request( 'POST' );
+        $request->set_body_params( $params );
 
         $response = $controller->create_item( $request );
 
@@ -157,7 +161,7 @@ class WooCommerce {
     private function generate_product( Generator $faker, $attachment_ids, $category_ids ) {
         $controller = new \WC_REST_Products_Controller();
 
-        $request = [
+        $params = [
             'name' => $faker->unique()->catchPhrase,
             'description' => $this->generate_post_content( $faker, $attachment_ids ),
             'status' =>  'publish',
@@ -171,15 +175,16 @@ class WooCommerce {
 
         $number_of_images = $faker->numberBetween( 1, 3 );
         for ( $i = 0; $i < $number_of_images; $i++ ) {
-            $request['images'][] = [ 'id' => $faker->randomElement( $attachment_ids ) ];
+            $params['images'][] = [ 'id' => $faker->randomElement( $attachment_ids ) ];
         }
 
         $number_of_categories = $faker->numberBetween( 1, 2 );
         for ( $i = 0; $i < $number_of_categories; $i++ ) {
-            $request['categories'][] = [ 'id' => $faker->randomElement( $category_ids ) ];
+            $params['categories'][] = [ 'id' => $faker->randomElement( $category_ids ) ];
         }
 
-        $request  = new \WP_REST_Request( 'POST', '', $request );
+        $request = new \WP_REST_Request( 'POST' );
+        $request->set_body_params( $params );
         $response = $controller->create_item( $request );
 
         if ( \is_wp_error( $response ) ) {
