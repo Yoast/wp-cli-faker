@@ -132,7 +132,7 @@ class WooCommerce {
             return false;
         }
 
-        return $response['id'];
+        return $response->data['id'];
     }
 
     private function generate_category( Generator $faker, $attachment_ids ) {
@@ -151,7 +151,7 @@ class WooCommerce {
             return false;
         }
 
-        return $response['id'];
+        return $response->data['id'];
     }
 
     private function generate_product( Generator $faker, $attachment_ids, $category_ids ) {
@@ -187,7 +187,7 @@ class WooCommerce {
             return false;
         }
 
-        return $response['id'];
+        return $response->data['id'];
     }
 }
 
