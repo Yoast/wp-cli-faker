@@ -12,7 +12,14 @@
     ],
     "autoload": {
         "files": [
-            "src/core.php"
+            "src/core.php",
+            "src/woocommerce.php"
         ]
+    },
+    "require-dev": {
+        "woocommerce/woocommerce": "^3.8"
+    },
+    "extra": {
+        "installer-disable": true
     }
 }
