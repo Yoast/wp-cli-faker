@@ -128,7 +128,7 @@ class WooCommerce {
         $response = $controller->create_item( $request );
 
         if ( \is_wp_error( $response ) ) {
-            \WP_CLI::warning( "Couln't create product: " . $response->get_error_message() );
+            \WP_CLI::warning( "Couln't create review: " . $response->get_error_message() );
             return false;
         }
 
@@ -147,7 +147,7 @@ class WooCommerce {
         $response = $controller->create_item( $request );
 
         if ( \is_wp_error( $response ) ) {
-            \WP_CLI::warning( "Couln't create product: " . $response->get_error_message() );
+            \WP_CLI::warning( "Couln't create category: " . $response->get_error_message() );
             return false;
         }
 
@@ -157,7 +157,7 @@ class WooCommerce {
     private function generate_product( Generator $faker, $attachment_ids, $category_ids ) {
         $controller = new \WC_REST_Products_Controller();
 
-        $request    = new \WP_REST_Request( 'POST', '', [
+        $request = [
             'name' => $faker->unique()->catchPhrase,
             'description' => $this->generate_post_content( $faker, $attachment_ids ),
             'status' =>  'publish',
@@ -167,7 +167,7 @@ class WooCommerce {
             'regular_price' => $faker->numberBetween( 10, 100 ),
             'images' => [],
             'categories' => [],
-        ] );
+        ];
 
         $number_of_images = $faker->numberBetween( 1, 3 );
         for ( $i = 0; $i < $number_of_images; $i++ ) {
@@ -179,6 +179,7 @@ class WooCommerce {
             $request['categories'][] = [ 'id' => $faker->randomElement( $category_ids ) ];
         }
 
+        $request  = new \WP_REST_Request( 'POST', '', $request );
         $response = $controller->create_item( $request );
 
         if ( \is_wp_error( $response ) ) {
