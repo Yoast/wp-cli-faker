@@ -87,12 +87,16 @@ class WooCommerce {
             }
         }
 
+        add_filter( 'wp_is_comment_flood', '__return_false', PHP_INT_MAX );
+        add_filter( 'pre_comment_approved', '__return_true' );
         foreach ( $product_ids as $product_id ) {
             $number_of_reviews = $faker->numberBetween( $assoc_args['max-reviews'], $assoc_args['max-reviews'] );
             for ( $i = 0; $i < $number_of_reviews; $i++ ) {
                 $this->generate_review( $faker, $product_id );
             }
         }
+        remove_filter( 'wp_is_comment_flood', '__return_false', PHP_INT_MAX );
+        remove_filter( 'pre_comment_approved', '__return_true' );
     }
 
     private function generate_post_content( $faker, $attachment_ids ) {
