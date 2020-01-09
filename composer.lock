@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9961f66efea7131fb6a4b8937a5d2390",
+    "content-hash": "324c120cab8f1ada2d526342c49826f7",
     "packages": [
         {
             "name": "cweagans/composer-patches",
@@ -714,6 +714,24 @@
             "description": "The WooCommerce core REST API.",
             "homepage": "https://github.com/woocommerce/woocommerce-rest-api",
             "time": "2019-07-16T14:27:40+00:00"
+        },
+        {
+            "name": "wpackagist-plugin/perfect-woocommerce-brands",
+            "version": "1.7.7",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/perfect-woocommerce-brands/",
+                "reference": "tags/1.7.7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/perfect-woocommerce-brands.1.7.7.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/perfect-woocommerce-brands/"
         }
     ],
     "aliases": [],

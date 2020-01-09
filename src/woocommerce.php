@@ -4,6 +4,7 @@ namespace Yoast\WP\Tools;
 
 use Faker\Factory;
 use Faker\Generator;
+use Perfect_Woocommerce_Brands\PWB_API_Support;
 
 class WooCommerce {
     /**
@@ -25,6 +26,12 @@ class WooCommerce {
      *
      * [--categories=<categories>]
      * : The number of categories to generate.
+     * ---
+     * default: 25
+     * ---
+     *
+     * [--brands=<brands>]
+     * : The number of brands to generate.
      * ---
      * default: 25
      * ---
@@ -79,9 +86,19 @@ class WooCommerce {
             }
         }
 
+        $brand_ids = [];
+        if ( \taxonomy_exists( 'pwb-brand') ) {
+            for ( $i = 0; $i < (int) $assoc_args['brands']; $i++ ) {
+                $brand_id = $this->generate_brand( $faker, $attachment_ids );
+                if ( $brand_id ) {
+                    $brand_ids[] = $brand_id;
+                }
+            }
+        }
+
         $product_ids = [];
         for ( $i = 0; $i < (int) $assoc_args['products']; $i++ ) {
-            $product_id = $this->generate_product( $faker, $attachment_ids, $category_ids );
+            $product_id = $this->generate_product( $faker, $attachment_ids, $category_ids, $brand_ids );
             if ( $product_id ) {
                 $product_ids[] = $product_id;
             }
@@ -115,6 +132,19 @@ class WooCommerce {
         }
 
         return implode( "\n", $blocks );
+    }
+
+    private function generate_brand( Generator $faker, $attachment_ids ) {
+        $term = \wp_insert_term( $faker->unique()->catchPhrase, 'pwb-brand', [ 'description' => $faker->paragraph ] );
+
+        if ( \is_wp_error( $$term ) ) {
+            \WP_CLI::warning( "Couln't create brand: " . $$term->get_error_message() );
+            return false;
+        }
+
+        \update_term_meta( $term['term_id'], 'pwb_brand_image', $faker->randomElement( $attachment_ids ) );
+
+        return $term['term_id'];
     }
 
     private function generate_review( Generator $faker, $product_id ) {
@@ -162,7 +192,7 @@ class WooCommerce {
         return $response->data['id'];
     }
 
-    private function generate_product( Generator $faker, $attachment_ids, $category_ids ) {
+    private function generate_product( Generator $faker, $attachment_ids, $category_ids, $brand_ids ) {
         $controller = new \WC_REST_Products_Controller();
 
         $params = [
@@ -186,6 +216,9 @@ class WooCommerce {
         for ( $i = 0; $i < $number_of_categories; $i++ ) {
             $params['categories'][] = [ 'id' => $faker->randomElement( $category_ids ) ];
         }
+
+        $number_of_brands = $faker->numberBetween( 1, 2 );
+        $params['brands'] = $faker->randomElements( $brand_ids, $number_of_brands );
 
         $request = new \WP_REST_Request( 'POST' );
         $request->set_body_params( $params );

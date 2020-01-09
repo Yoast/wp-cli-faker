@@ -1,5 +1,11 @@
 {
     "name": "yoast/wp-cli-faker",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://wpackagist.org"
+        }
+    ],
     "require": {
         "wp-cli/wp-cli": "^2.4",
         "fzaninotto/faker": "^1.9"
@@ -17,7 +23,8 @@
         ]
     },
     "require-dev": {
-        "woocommerce/woocommerce": "^3.8"
+        "woocommerce/woocommerce": "^3.8",
+        "wpackagist-plugin/perfect-woocommerce-brands": "^1.7"
     },
     "extra": {
         "installer-disable": true

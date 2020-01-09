@@ -32,11 +32,13 @@ class Core {
      * : The number of attachments to generate.
      * ---
      * default: 10
+     * ---
      *
      * [--attachment-keyword=<attachment-keyword>]
      * : The keyword used to generate attachments.
      * ---
      * default: wordpress
+     * ---
      *
      * [--posts=<posts>]
      * : The number of posts to generate.
