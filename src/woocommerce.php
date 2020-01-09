@@ -137,7 +137,7 @@ class WooCommerce {
     private function generate_brand( Generator $faker, $attachment_ids ) {
         $term = \wp_insert_term( $faker->unique()->catchPhrase, 'pwb-brand', [ 'description' => $faker->paragraph ] );
 
-        if ( \is_wp_error( $$term ) ) {
+        if ( \is_wp_error( $term ) ) {
             \WP_CLI::warning( "Couln't create brand: " . $$term->get_error_message() );
             return false;
         }
