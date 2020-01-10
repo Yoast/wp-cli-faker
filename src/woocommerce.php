@@ -96,7 +96,7 @@ class WooCommerce {
 				'brand',
 				(int) $assoc_args['brands'],
 				function() use ( $core_generator, $attachment_ids ) {
-					$id = $$core_generator->generate_term( 'pwb-brand' );
+					$id = $core_generator->generate_term( 'pwb-brand' );
 					\update_term_meta( $id, 'pwb_brand_image', $this->faker->randomElement( $attachment_ids ) );
 					return $id;
 				}

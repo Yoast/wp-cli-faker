@@ -105,7 +105,7 @@ class WooCommerce_Generator {
 
 		$params = [
 			'name'          => $this->faker->unique()->catchPhrase,
-			'description'   => $$this->core_generator->generate_post_content( $attachment_ids ),
+			'description'   => $this->core_generator->generate_post_content( $attachment_ids ),
 			'status'        => 'publish',
 			'type'          => 'Simple',
 			'featured'      => $this->faker->boolean( 10 ),

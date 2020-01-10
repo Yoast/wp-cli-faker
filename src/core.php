@@ -90,7 +90,7 @@ class Core {
 			'tag',
 			(int) $assoc_args['tags'],
 			function() use ( $generator ) {
-				return $generator->generate_term( 'tag' );
+				return $generator->generate_term( 'post_tag' );
 			}
 		);
 

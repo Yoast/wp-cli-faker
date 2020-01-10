@@ -147,8 +147,8 @@ class Core_Generator {
 			]
 		);
 
-		if ( \is_wp_error( $$post_id ) ) {
-			throw new Exception( $$post_id->get_error_message() );
+		if ( \is_wp_error( $post_id ) ) {
+			throw new Exception( $post_id->get_error_message() );
 		}
 
 		\set_post_thumbnail( $post_id, $this->faker->randomElement( $attachment_ids ) );
