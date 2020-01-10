@@ -7,7 +7,6 @@
         }
     ],
     "require": {
-        "wp-cli/wp-cli": "^2.4",
         "fzaninotto/faker": "^1.9"
     },
     "authors": [
@@ -19,12 +18,15 @@
     "autoload": {
         "files": [
             "src/core.php",
-            "src/woocommerce.php"
+            "src/woocommerce.php",
+            "src/helper-functions.php"
         ]
     },
     "require-dev": {
         "woocommerce/woocommerce": "^3.8",
-        "wpackagist-plugin/perfect-woocommerce-brands": "^1.7"
+        "wpackagist-plugin/perfect-woocommerce-brands": "^1.7",
+        "yoast/yoastcs": "^2.0",
+        "wp-cli/wp-cli": "^2.4"
     },
     "extra": {
         "installer-disable": true
