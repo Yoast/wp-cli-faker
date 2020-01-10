@@ -20,6 +20,9 @@
             "src/core.php",
             "src/woocommerce.php",
             "src/helper-functions.php"
+        ],
+        "classmap": [
+            "src/"
         ]
     },
     "require-dev": {
