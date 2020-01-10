@@ -28,7 +28,7 @@ The `wp faker core content` command generates authors, attachments, categories, 
 
 The `wp faker woocommerce products` command generates attachments, product categories, brands ( if Perfect WooCommerce Brands is installed ), products and review. It supports the following flags:
 - attachments: The number of attachments to generate, by default 10.
-- attachment_keyword: The keyword to search for on loremflickr.com, by default wordpress.
+- attachment_keyword: The keyword to search for on loremflickr.com, by default jewelry.
 - categories: The number of product categories to generate, by default 25.
 - brands: The number of brands to generate, by default 25.
 - products: The number of products to generate, by default 300.
