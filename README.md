@@ -18,7 +18,7 @@ In many cases the default memory limit will not be enough to run composer so run
 The `wp faker core content` command generates authors, attachments, categories, tags, posts and pages. It supports the following flags:
 - authors: The number of authors to generate, by default 10.
 - attachments: The number of attachments to generate, by default 10.
-- attachment_keyword: The keyword to search for on loremflickr.com, by default wordpress.
+- attachment-keyword: The keyword to search for on loremflickr.com, by default wordpress.
 - categories: The number of categories to generate, by default 10.
 - tags: The number of tags to generate, by default 25.
 - posts: The number of posts to generate, by default 100.
@@ -28,7 +28,7 @@ The `wp faker core content` command generates authors, attachments, categories, 
 
 The `wp faker woocommerce products` command generates attachments, product categories, brands ( if Perfect WooCommerce Brands is installed ), products and review. It supports the following flags:
 - attachments: The number of attachments to generate, by default 10.
-- attachment_keyword: The keyword to search for on loremflickr.com, by default jewelry.
+- attachment-keyword: The keyword to search for on loremflickr.com, by default jewelry.
 - categories: The number of product categories to generate, by default 25.
 - brands: The number of brands to generate, by default 25.
 - products: The number of products to generate, by default 300.
