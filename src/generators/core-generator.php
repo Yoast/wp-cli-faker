@@ -15,7 +15,7 @@ class Core_Generator {
 	 *
 	 * @var Generator
 	 */
-	private $faker;
+	protected $faker;
 
 	/**
 	 * Construct a generator for core data.
