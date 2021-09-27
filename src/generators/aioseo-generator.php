@@ -44,6 +44,8 @@ class AIOSEO_Generator extends Core_Generator {
 		'#taxonomy_title',
 	];
 
+	private static $custom_fields = [];
+
 	/**
 	 * Generates a post with AIOSEO meta.
 	 *
@@ -61,8 +63,13 @@ class AIOSEO_Generator extends Core_Generator {
 	public function generate_post( $post_type, $author_ids, $attachment_ids, $parent_ids, $category_ids, $tag_ids ) {
 		$post_id = parent::generate_post( $post_type, $author_ids, $attachment_ids, $parent_ids, $category_ids, $tag_ids );
 
+		$all_replace_vars = self::REPLACE_VARS;
+		foreach ( self::$custom_field_keys as $key ) {
+			$all_replace_vars[] = '#custom_field-' . $key;
+		}
+
 		foreach ( self::META_KEYS as $meta_key ) {
-			$replace_vars = $this->faker->randomElements( self::REPLACE_VARS, $this->faker->numberBetween( 2, 5 ) );
+			$replace_vars = $this->faker->randomElements( $all_replace_vars, $this->faker->numberBetween( 2, 5 ) );
 
 			\add_post_meta( $post_id, $meta_key, \implode( ' ', $replace_vars ) );
 		}

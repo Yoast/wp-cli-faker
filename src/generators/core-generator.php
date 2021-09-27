@@ -17,6 +17,8 @@ class Core_Generator {
 	 */
 	protected $faker;
 
+	protected static $custom_field_keys = [];
+
 	/**
 	 * Construct a generator for core data.
 	 *
@@ -144,6 +146,7 @@ class Core_Generator {
 				'post_modified' => ( ( $this->faker->boolean ) ? $this->faker->dateTimeBetween( $date ) : $date )->format( 'Y-m-d H:i:s' ),
 				'post_category' => $this->faker->randomElements( $category_ids, $this->faker->numberBetween( 1, 2 ) ),
 				'tags_input'    => $this->faker->randomElements( $tag_ids, $this->faker->numberBetween( 0, 4 ) ),
+				'meta_input'    => $this->generate_custom_fields(),
 			]
 		);
 
@@ -179,5 +182,23 @@ class Core_Generator {
 		}
 
 		return implode( "\n", $blocks );
+	}
+
+	public function generate_custom_fields() {
+		if ( count( self::$custom_field_keys ) === 0 ) {
+			for ( $i = 0; $i < 10; $i++ ) {
+				self::$custom_field_keys[] = $this->faker->word;
+			}
+		}
+
+		$custom_fields = [];
+		for ( $i = 0; $i < count( self::$custom_field_keys ); $i++ ) {
+			$value = $this->faker->word;
+			$key   = self::$custom_field_keys[ $i ];
+
+			$custom_fields[ $key ] = $value;
+		}
+
+		return $custom_fields;
 	}
 }
