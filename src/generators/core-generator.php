@@ -19,6 +19,8 @@ class Core_Generator {
 
 	protected static $custom_field_keys = [];
 
+	protected static $custom_field_prefix = 'wp_cli_faker_';
+
 	/**
 	 * Construct a generator for core data.
 	 *
@@ -187,7 +189,7 @@ class Core_Generator {
 	public function generate_custom_fields() {
 		if ( count( self::$custom_field_keys ) === 0 ) {
 			for ( $i = 0; $i < 10; $i++ ) {
-				self::$custom_field_keys[] = $this->faker->word;
+				self::$custom_field_keys[] = self::$custom_field_prefix . $this->faker->word;
 			}
 		}
 
