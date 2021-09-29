@@ -18,9 +18,7 @@ Clone the repo into your WordPress plugins folder.
 
 This repo requires composer 1+ in order to be compatible with WP cli, so to use it as a plugin you must install dependencies with composer 1+. For ease of use composer 1 is shipped as a .phar file.
 
-Run `chmod +x composer.phar`.
-
-Run `./composer.phar install`.
+Run `php composer.phar install`.
 
 ## Core
 
