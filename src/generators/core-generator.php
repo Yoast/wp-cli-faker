@@ -186,6 +186,11 @@ class Core_Generator {
 		return implode( "\n", $blocks );
 	}
 
+	/**
+	 * Generates custom fields with random words as a value.
+	 *
+	 * @return string[] The array of generate custom fields.
+	 */
 	public function generate_custom_fields() {
 		if ( count( self::$custom_field_keys ) === 0 ) {
 			for ( $i = 0; $i < 10; $i++ ) {
