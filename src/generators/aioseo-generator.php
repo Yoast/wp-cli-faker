@@ -69,17 +69,6 @@ class AIOSEO_Generator extends Core_Generator {
 	}
 
 	/**
-	 * Generates a random title or description using AIOSEO replacement variables.
-	 *
-	 * @param array $replace_vars Array of replacevars to use.
-	 *
-	 * @return string The generated replacevar string.
-	 */
-	private function generate_aioseo_replace_vars( $replace_vars ) {
-		return \implode( ' ', $this->faker->randomElements( $replace_vars, $this->faker->numberBetween( 2, 5 ) ) );
-	}
-
-	/**
 	 * Generates random All-in-One SEO data in the form of an associative array
 	 * mapping AiOSEO field name to value.
 	 *
@@ -96,12 +85,12 @@ class AIOSEO_Generator extends Core_Generator {
 		return [
 			// "id" => 0, // Auto increment
 			"post_id"             => $post_id,
-			"title"               => $this->generate_aioseo_replace_vars( $replace_vars ),
-			"description"         => $this->generate_aioseo_replace_vars( $replace_vars ),
-			"og_title"            => $this->generate_aioseo_replace_vars( $replace_vars ),
-			"og_description"      => $this->generate_aioseo_replace_vars( $replace_vars ),
-			"twitter_title"       => $this->generate_aioseo_replace_vars( $replace_vars ),
-			"twitter_description" => $this->generate_aioseo_replace_vars( $replace_vars ),
+			"title"               => $this->generate_aioseo_text_with_replace_vars( $replace_vars ),
+			"description"         => $this->generate_aioseo_text_with_replace_vars( $replace_vars ),
+			"og_title"            => $this->generate_aioseo_text_with_replace_vars( $replace_vars ),
+			"og_description"      => $this->generate_aioseo_text_with_replace_vars( $replace_vars ),
+			"twitter_title"       => $this->generate_aioseo_text_with_replace_vars( $replace_vars ),
+			"twitter_description" => $this->generate_aioseo_text_with_replace_vars( $replace_vars ),
 			"keywords"            => null, // We don't offer keywords functionality.
 			/**
 			 * {
@@ -299,5 +288,17 @@ class AIOSEO_Generator extends Core_Generator {
 			},
 			$custom_field_keys
 		);
+	}
+
+	/**
+	 * Generates a random title or description using AIOSEO replacement variables.
+	 *
+	 * @param array $replace_vars Array of replacevars to use.
+	 *
+	 * @return string The generated replacevar string.
+	 */
+	private function generate_aioseo_text_with_replace_vars( $replace_vars ) {
+		$items = \array_merge( $this->faker->words( 12 ), $replace_vars );
+		return \implode( ' ', $this->faker->randomElements( $items, $this->faker->numberBetween( 2, 5 ) ) );
 	}
 }
