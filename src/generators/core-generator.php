@@ -194,11 +194,8 @@ class Core_Generator {
 		}
 
 		$custom_fields = [];
-		for ( $i = 0; $i < count( self::$custom_field_keys ); $i++ ) {
-			$value = $this->faker->word;
-			$key   = self::$custom_field_keys[ $i ];
-
-			$custom_fields[ $key ] = $value;
+		foreach ( self::$custom_field_keys as $key ) {
+			$custom_fields[ $key ] = $this->faker->word;
 		}
 
 		return $custom_fields;
