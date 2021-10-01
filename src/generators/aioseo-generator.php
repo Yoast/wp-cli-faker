@@ -109,7 +109,7 @@ class AIOSEO_Generator extends Core_Generator {
 			 * }
 			 */
 			"keyphrases"          => null, // JSON, see above.
-			"page_analysis"       => null, // JSON, Not important
+			"page_analysis"       => null, // JSON, Not important, since we can't use a different scoring mechanism.
 			"canonical_url"       => null, // string
 			/**
 			 * See link for object types.
