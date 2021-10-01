@@ -61,12 +61,39 @@ class AIOSEO_Generator extends Core_Generator {
 	public function generate_post( $post_type, $author_ids, $attachment_ids, $parent_ids, $category_ids, $tag_ids ) {
 		$post_id = parent::generate_post( $post_type, $author_ids, $attachment_ids, $parent_ids, $category_ids, $tag_ids );
 
+		$aioseo_fields = $this->generate_aioseo_fields( $post_id );
+		$this->insert_data_into_aioseo_table( $aioseo_fields );
+		$this->insert_aioseo_data_into_post_meta_table( $post_id, $aioseo_fields );
+
+		return $post_id;
+	}
+
+	/**
+	 * Generates a random title or description using AIOSEO replacement variables.
+	 *
+	 * @param array $replace_vars Array of replacevars to use.
+	 *
+	 * @return string The generated replacevar string.
+	 */
+	private function generate_aioseo_replace_vars( $replace_vars ) {
+		return \implode( ' ', $this->faker->randomElements( $replace_vars, $this->faker->numberBetween( 2, 5 ) ) );
+	}
+
+	/**
+	 * Generates random All-in-One SEO data in the form of an associative array
+	 * mapping AiOSEO field name to value.
+	 *
+	 * @param int $post_id The ID of the post to generate data for.
+	 *
+	 * @return array Generated AiOSEO data.
+	 */
+	private function generate_aioseo_fields( $post_id ) {
 		$replace_vars = \array_merge(
 			self::REPLACE_VARS,
 			$this->get_custom_field_replace_vars( $post_id )
 		);
 
-		$aioseo_fields = [
+		return [
 			// "id" => 0, // Auto increment
 			"post_id"             => $post_id,
 			"title"               => $this->generate_aioseo_replace_vars( $replace_vars ),
@@ -154,31 +181,31 @@ class AIOSEO_Generator extends Core_Generator {
 			 *    },
 			 *    "faq":{
 			 *       "pages":[
-			 *          
+			 *
 			 *       ]
 			 *    },
 			 *    "product":{
 			 *       "reviews":[
-			 *          
+			 *
 			 *       ]
 			 *    },
 			 *    "recipe":{
 			 *       "ingredients":[
-			 *          
+			 *
 			 *       ],
 			 *       "instructions":[
-			 *          
+			 *
 			 *       ],
 			 *       "keywords":[
-			 *          
+			 *
 			 *       ]
 			 *    },
 			 *    "software":{
 			 *       "reviews":[
-			 *          
+			 *
 			 *       ],
 			 *       "operatingSystems":[
-			 *          
+			 *
 			 *       ]
 			 *    },
 			 *    "webPage":{
@@ -209,39 +236,46 @@ class AIOSEO_Generator extends Core_Generator {
 			// "created" => null, // Date string, defaults to current date
 			// "updated" => null, // Date string, defaults to current date
 		];
-
-		global $wpdb;
-
-		$wpdb->query( 
-			$wpdb->prepare(
-				"
-				INSERT INTO {$wpdb->prefix}aioseo_posts
-				(" . \implode( ",", \array_keys( $aioseo_fields ) ) . ")
-				VALUES
-				(" . \implode( ', ', \array_fill( 0, count( $aioseo_fields ), '%s' ) ) . ")
-				",
-				\array_values( $aioseo_fields )
-			)
-		);
-
-		foreach ( self::META_KEYS as $meta_key ) {
-			$db_key = str_replace( "_aioseo_", "", $meta_key );
-
-			add_post_meta( $post_id, $meta_key, $aioseo_fields[ $db_key ] );
-		}
-
-		return $post_id;
 	}
 
 	/**
-	 * Generates a random title or description using AIOSEO replacement variables.
+	 * Inserts the given generated All-in-One SEO data into their
+	 * own purposefully built database table.
 	 *
-	 * @param array $replace_vars Array of replacevars to use.
+	 * @param array $aioseo_data The generated AiOSEO data.
 	 *
-	 * @return string The generated replacevar string.
+	 * @return void
 	 */
-	private function generate_aioseo_replace_vars( $replace_vars ) {
-		return \implode( ' ', $this->faker->randomElements( $replace_vars, $this->faker->numberBetween( 2, 5 ) ) );
+	private function insert_data_into_aioseo_table( $aioseo_data ) {
+		global $wpdb;
+
+		$wpdb->query(
+			$wpdb->prepare(
+				"
+				INSERT INTO {$wpdb->prefix}aioseo_posts
+				(" . \implode( ",", \array_keys( $aioseo_data ) ) . ")
+				VALUES
+				(" . \implode( ', ', \array_fill( 0, count( $aioseo_data ), '%s' ) ) . ")
+				",
+				\array_values( $aioseo_data )
+			)
+		);
+	}
+
+	/**
+	 * Inserts the given All-in-One SEO data into the post meta table.
+	 *
+	 * @param int   $post_id     The ID of the post to insert the data for.
+	 * @param array $aioseo_data The AiOSEO data to insert.
+	 *
+	 * @return void
+	 */
+	private function insert_aioseo_data_into_post_meta_table( $post_id, $aioseo_data ) {
+		foreach ( self::META_KEYS as $meta_key ) {
+			$db_key = str_replace( "_aioseo_", "", $meta_key );
+
+			\add_post_meta( $post_id, $meta_key, $aioseo_data[ $db_key ] );
+		}
 	}
 
 	/**
@@ -249,18 +283,18 @@ class AIOSEO_Generator extends Core_Generator {
 	 *
 	 * @param int $post_id The post id.
 	 *
-	 * @return array List of AIOSEO replacement variables for custom fields.
+	 * @return string[] List of AIOSEO replacement variables for custom fields.
 	 */
 	private function get_custom_field_replace_vars( $post_id ) {
 		$custom_field_keys = \array_filter(
-			\get_post_custom_keys( $post_id ), 
-			function ( $key ) {
-				return strpos( $key, self::$custom_field_prefix ) === 0;
+			\get_post_custom_keys( $post_id ),
+			static function( $key ) {
+				return \strpos( $key, self::$custom_field_prefix ) === 0;
 			}
 		);
 
-		return array_map( 
-			function( $key ) {
+		return \array_map(
+			static function( $key ) {
 				return '#custom_field-' . $key;
 			},
 			$custom_field_keys
