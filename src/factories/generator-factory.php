@@ -21,6 +21,7 @@ class Generator_Factory {
 	public static function get_core_generator( $type ) {
 		$faker = Factory::create();
 
+		// If a third type is added we should convert to a strategy pattern.
 		if ( $type === 'aioseo' ) {
 			return new AIOSEO_Generator( $faker );
 		}
