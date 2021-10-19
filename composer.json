@@ -26,10 +26,10 @@
         ]
     },
     "require-dev": {
-        "woocommerce/woocommerce": "^3.8",
-        "wpackagist-plugin/perfect-woocommerce-brands": "^1.7",
-        "yoast/yoastcs": "^2.0",
-        "wp-cli/wp-cli": "^2.4"
+        "woocommerce/woocommerce": "^5.8",
+        "wpackagist-plugin/perfect-woocommerce-brands": "^1.9",
+        "yoast/yoastcs": "^2.2",
+        "wp-cli/wp-cli": "^2.5"
     },
     "extra": {
         "installer-disable": true
