@@ -2,8 +2,9 @@
 
 namespace Yoast\WP\Tools;
 
+use Faker\Factory;
 use WP_CLI;
-use Yoast\WP\Tools\Factories\Generator_Factory;
+use Yoast\WP\Tools\Generators\Core_Generator;
 
 /**
  * The core faker command.
@@ -57,12 +58,6 @@ class Core {
 	 * default: 5
 	 * ---
 	 *
-	 * [--type=<type>]
-	 * : The type of generator to use. Passing aioseo generators posts with aioseo meta.
-	 * ---
-	 * default: default
-	 * ---
-	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp faker core content
@@ -73,7 +68,8 @@ class Core {
 	 * @param array    $assoc_args The associative command line arguments.
 	 */
 	public function content( $args, $assoc_args ) {
-		$generator = Generator_Factory::get_core_generator( $assoc_args['type'] );
+		$faker     = Factory::create();
+		$generator = new Core_Generator( $faker );
 
 		$author_ids   = generate_with_progress(
 			'author',

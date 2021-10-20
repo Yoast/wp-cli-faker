@@ -15,11 +15,7 @@ class Core_Generator {
 	 *
 	 * @var Generator
 	 */
-	protected $faker;
-
-	protected static $custom_field_keys = [];
-
-	protected static $custom_field_prefix = 'wp_cli_faker_';
+	private $faker;
 
 	/**
 	 * Construct a generator for core data.
@@ -148,7 +144,6 @@ class Core_Generator {
 				'post_modified' => ( ( $this->faker->boolean ) ? $this->faker->dateTimeBetween( $date ) : $date )->format( 'Y-m-d H:i:s' ),
 				'post_category' => $this->faker->randomElements( $category_ids, $this->faker->numberBetween( 1, 2 ) ),
 				'tags_input'    => $this->faker->randomElements( $tag_ids, $this->faker->numberBetween( 0, 4 ) ),
-				'meta_input'    => $this->generate_custom_fields(),
 			]
 		);
 
@@ -184,25 +179,5 @@ class Core_Generator {
 		}
 
 		return implode( "\n", $blocks );
-	}
-
-	/**
-	 * Generates custom fields with random words as a value.
-	 *
-	 * @return string[] The array of generate custom fields.
-	 */
-	public function generate_custom_fields() {
-		if ( count( self::$custom_field_keys ) === 0 ) {
-			for ( $i = 0; $i < 10; $i++ ) {
-				self::$custom_field_keys[] = self::$custom_field_prefix . $this->faker->word;
-			}
-		}
-
-		$custom_fields = [];
-		foreach ( self::$custom_field_keys as $key ) {
-			$custom_fields[ $key ] = $this->faker->word;
-		}
-
-		return $custom_fields;
 	}
 }
