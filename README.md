@@ -2,7 +2,7 @@
 
 This package introduces two new WP CLI commands to generate fake data.
 
-## Install as WordPress package
+## Installing
 
 This command can be installed for WP CLI by running:
 
@@ -12,11 +12,6 @@ In many cases the default memory limit will not be enough to run composer so run
 
 `php -d memory_limit=512M "$(which wp)" package install git@github.com:Yoast/wp-cli-faker.git`
 
-## Install as WordPress Plugin
-
-Clone the repo into your WordPress plugins folder.
-
-Run `composer install`.
 
 ## Core
 
