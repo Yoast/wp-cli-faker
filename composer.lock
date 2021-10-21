@@ -215,8 +215,8 @@
                 "zikula"
             ],
             "time": "2019-08-12T15:00:31+00:00"
-            },
-                {
+        },
+        {
             "name": "cweagans/composer-patches",
             "version": "1.6.7",
             "source": {
@@ -241,7 +241,7 @@
             "type": "composer-plugin",
             "extra": {
                 "class": "cweagans\\Composer\\Patches"
-                },
+            },
             "autoload": {
                 "psr-4": {
                     "cweagans\\Composer\\": "src"
